@@ -33,7 +33,6 @@ define(['delegate/_sportDelegate'], function() {
     
         
        create: function(sport,callback, callbackError) {
-           alert("Aqui vamos delegate")
            alert('JSON Enviado: '+JSON.stringify(sport));
            $.ajax({                
                type: "POST",
@@ -53,7 +52,6 @@ define(['delegate/_sportDelegate'], function() {
        },
 //        
        getSports: function(callback, callbackError) {
-           alert("Aqui vamos delegate obtener sports")
            $.ajax({                
                type: "GET",
                url: "http://backendsport.herokuapp.com/webresources/Sport",
@@ -70,9 +68,9 @@ define(['delegate/_sportDelegate'], function() {
            }, this));
        }, 
        
-       deleteSport: function(sport, callback, callbackError) {
-           var id= 2;
-           alert('JSON Enviado: '+JSON.stringify(sport));
+       deleteSport: function(id, callback, callbackError) {
+       
+           alert('ID enviado: '+ id);
            alert("Aqui vamos delegate borrar sports")
            $.ajax({                
                type: "DELETE",
@@ -89,16 +87,14 @@ define(['delegate/_sportDelegate'], function() {
                callbackError(data);
            }, this));
        },
-       editSport: function(sport, callback, callbackError) {
-           var id= sport.id;
+       editSport: function(id,sport, callback, callbackError) {
+           
            alert('JSON Enviado: '+JSON.stringify(sport));
-           alert("Aqui vamos delegate edit sports")
            $.ajax({                
                type: "DELETE",
-               url: "http://backendsport.herokuapp.com/webresources/Sport",
+               url: "http://backendsport.herokuapp.com/webresources/Sport" + id,
                crossDomain: true,
                dataType: 'json',
-               data : id,
                contentType: "application/json"
            }).done(_.bind(function(data) {
                 console.log(data);

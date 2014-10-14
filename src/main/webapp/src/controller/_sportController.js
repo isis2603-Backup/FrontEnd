@@ -74,11 +74,9 @@ define(['model/sportModel'], function(sportModel) {
                    
                    var model= new App.Model.SportModel(d);
                    self.sportModelList.models.push(model);
-                   alert('---ya paso---------');
                    self._renderList();
                    Backbone.trigger(self.componentId + '-' + 'post-sport-list', {view: self});
                });
-               alert('---ya paso 2---------');
                
                 ////
 //                this.sportModelList.fetch({
@@ -101,7 +99,7 @@ define(['model/sportModel'], function(sportModel) {
             } else {
                 Backbone.trigger(this.componentId + '-' + 'pre-sport-edit', {view: this, id: id, data: data});
                 if (this.sportModelList) {
-                    this.currentSportModel = this.sportModelList.get(id);
+                    this.currentSportModel = this.sportModelList.models.get(id);//this.sportModelList.get(id);
                     this.currentSportModel.set('componentId',this.componentId); 
                     this._renderEdit();
                     Backbone.trigger(this.componentId + '-' + 'post-sport-edit', {view: this, id: id, data: data});
@@ -124,28 +122,25 @@ define(['model/sportModel'], function(sportModel) {
         },
         destroy: function(params) {
             var id = params.id;
-            alert( "id:" + id);
             var self = this;
             if (App.Utils.eventExists(this.componentId + '-' +'instead-sport-delete')) {
                 Backbone.trigger(this.componentId + '-' + 'instead-sport-delete', {view: this, id: id});
             } else {
                 Backbone.trigger(this.componentId + '-' + 'pre-sport-delete', {view: this, id: id});
-                var deleteModel;
-                if (this.sportModelList) {
-                    deleteModel = this.sportModelList.get(id); //set({ myAttribute1: true });
-                    alert( "list:" + this.sportModelList);
-                    alert( "model:" + deleteModel);
-                } else {
-                    deleteModel = new this.modelClass({id: id});
-                }
-                App.Delegate.SportDelegate.deleteSport(deleteModel,function(data){
+                App.Delegate.SportDelegate.deleteSport(id,function(data){
+                });
+                this.sportModelList = null;
+                this.list();
+                
+//                App.Delegate.SportDelegate.getSports( function(data){
 //                    _.each(data,function(d){
+//                   
 //                   var model= new App.Model.SportModel(d);
 //                   self.sportModelList.models.push(model);
-                   alert('---ya paso 1---------');
-                   Backbone.trigger(self.componentId + '-' + 'post-sport-delete', {view: self, model: deleteModel});
-                   alert('---ya paso 2---------');
-                });
+//                   self._renderList();
+//                   Backbone.trigger(self.componentId + '-' + 'post-sport-list', {view: self});
+//               });
+//               }); 
                 
               
 //                deleteModel.destroy({
@@ -167,14 +162,10 @@ define(['model/sportModel'], function(sportModel) {
                 Backbone.trigger(this.componentId + '-' + 'pre-sport-save', {view: this, model : model});
                 this.currentSportModel.set(model);
                 App.Delegate.SportDelegate.create(model,function(data){
-//                    _.each(data,function(d){
-//                   var model= new App.Model.SportModel(d);
                    self.sportModelList.models.push(model);
-                   //alert('---ya paso 1---------');
-                   //self._renderList();
-                   //alert('---ya paso 2---------');
-                   Backbone.trigger(self.componentId + '-' + 'post-sport-save', {model: model});
+                   Backbone.trigger(self.componentId + '-' + 'post-sport-save', {model: self.model});
                 }); 
+                this.list();
 //                this.currentSportModel.save({},
 //                        {
 //                            success: function(model) {

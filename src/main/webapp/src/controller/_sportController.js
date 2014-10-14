@@ -77,6 +77,8 @@ define(['model/sportModel'], function(sportModel) {
                    self._renderList();
                    Backbone.trigger(self.componentId + '-' + 'post-sport-list', {view: self});
                });
+              
+               
                
                 ////
 //                this.sportModelList.fetch({
@@ -99,7 +101,13 @@ define(['model/sportModel'], function(sportModel) {
             } else {
                 Backbone.trigger(this.componentId + '-' + 'pre-sport-edit', {view: this, id: id, data: data});
                 if (this.sportModelList) {
-                    this.currentSportModel = this.sportModelList.models.get(id);//this.sportModelList.get(id);
+                   // TOCO EL FOR
+                    
+                    for(var i=0;i< this.sportModelList.models.length;i++){
+                        if(this.sportModelList.models[i].attributes.id == id){
+                            this.currentSportModel = this.sportModelList.models[i];
+                        }
+                    }
                     this.currentSportModel.set('componentId',this.componentId); 
                     this._renderEdit();
                     Backbone.trigger(this.componentId + '-' + 'post-sport-edit', {view: this, id: id, data: data});
@@ -127,6 +135,9 @@ define(['model/sportModel'], function(sportModel) {
                 Backbone.trigger(this.componentId + '-' + 'instead-sport-delete', {view: this, id: id});
             } else {
                 Backbone.trigger(this.componentId + '-' + 'pre-sport-delete', {view: this, id: id});
+                var deleteModel;
+                deleteModel = this.sportModelList.models.get(id);
+                alert("aqui deleteModel: "  +  deleteModel);
                 App.Delegate.SportDelegate.deleteSport(id,function(data){
                 });
                 this.sportModelList = null;
@@ -163,9 +174,12 @@ define(['model/sportModel'], function(sportModel) {
                 this.currentSportModel.set(model);
                 App.Delegate.SportDelegate.create(model,function(data){
                    self.sportModelList.models.push(model);
+                   this.sportModelList = null;
                    Backbone.trigger(self.componentId + '-' + 'post-sport-save', {model: self.model});
                 }); 
-                this.list();
+                 this.sportModelList = null;
+                 this.list();
+               
 //                this.currentSportModel.save({},
 //                        {
 //                            success: function(model) {

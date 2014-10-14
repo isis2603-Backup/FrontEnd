@@ -1,0 +1,9 @@
+{
+    "displayName" : "Sport",
+    "name" : "sport",
+    "templateName" : "sport",
+    "url" : "user.html",
+    "server": "backendsport.herokuapp.com",
+    "context": "/webresources/Sport",
+    "el" : "#main"
+}
